@@ -40,15 +40,15 @@
 
 - **Окна регистрации и входа**
 
-![Окно регистрации](images/image1.png)
-![Окно регистрации](images/image2.png)
-![Вход](images/image3.png)
+![Окно регистрации](images/image1.PNG)
+![Окно регистрации](images/image2.PNG)
+![Вход](images/image3.PNG)
 
 - **Основные окна**
 
-![Окно с рассписанием](images/image4.png)
-![Окно со списком абонементов](images/image5.png)
-![Личная информация](images/image6.png)
+![Окно с рассписанием](images/image4.PNG)
+![Окно со списком абонементов](images/image5.PNG)
+![Личная информация](images/image6.PNG)
 
 ## Установка и запуск
 
