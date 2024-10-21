@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "1013809759370",
-    "project_id": "fitnessclub-9e8d1",
-    "storage_bucket": "fitnessclub-9e8d1.appspot.com"
+    "project_number": "556666503453",
+    "project_id": "fk54-21663",
+    "storage_bucket": "fk54-21663.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1013809759370:android:aaad51f2c7f052bc3f9973",
+        "mobilesdk_app_id": "1:556666503453:android:c6711c5c23c9f47915a1f4",
         "android_client_info": {
           "package_name": "com.example.fitnessclub"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAMfK-dlY1gILEiIg-yIvicBOK0jdANN70"
+          "current_key": "AIzaSyC3TUitH5rXy---t9jrVq_9s5eGSpk9dI0"
         }
       ],
       "services": {
