@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.gms)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.plugin.serialization)
 }
 
 android {
@@ -58,6 +60,8 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.firebase.auth)
     implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 
 
     implementation(libs.androidx.core.ktx)

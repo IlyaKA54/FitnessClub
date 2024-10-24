@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.fitnessclub.data.Model.AuthRepository
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.State
+import com.example.fitnessclub.data.View.MainScreen.MainScreenDataObject
 
 class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
@@ -18,10 +19,6 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _error = mutableStateOf("")
     val error: State<String> = _error
 
-    // Добавим новое состояние для отслеживания успешного логина
-    private val _isLoggedIn = mutableStateOf(false)
-    val isLoggedIn: State<Boolean> = _isLoggedIn
-
     fun onEmailChange(newEmail: String) {
         _email.value = newEmail
     }
@@ -30,12 +27,19 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
         _password.value = newPassword
     }
 
-    fun signIn(onSuccess: () -> Unit) {
-        // Логика входа с помощью Firebase
+    fun signIn(onSuccess: (MainScreenDataObject) -> Unit) {
+
+        if (_email.value.isBlank() || _password.value.isBlank()) {
+            _error.value = "Email and password cannot be empty"
+            return
+        }
+
         authRepository.signIn(
             email = _email.value,
             password = _password.value,
-            onSuccess = onSuccess,
+            onSuccess = { navData ->
+                onSuccess(navData)
+            },
             onFailure = { errorMessage ->
                 _error.value = errorMessage
             }

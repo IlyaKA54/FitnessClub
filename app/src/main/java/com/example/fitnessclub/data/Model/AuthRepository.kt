@@ -1,24 +1,26 @@
 package com.example.fitnessclub.data.Model
 
+import com.example.fitnessclub.data.View.MainScreen.MainScreenDataObject
 import com.google.firebase.auth.FirebaseAuth
 
 class AuthRepository(private val auth: FirebaseAuth) {
 
-    // Метод для авторизации через Firebase
     fun signIn(
         email: String,
         password: String,
-        onSuccess: () -> Unit,
+        onSuccess: (MainScreenDataObject) -> Unit,
         onFailure: (String) -> Unit
     ) {
-        if (email.isBlank() || password.isBlank()) {
-            onFailure("Email and password cannot be empty")
-            return
-        }
-
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) onSuccess()
+                if (task.isSuccessful) {
+                    onSuccess(
+                        MainScreenDataObject(
+                            task.result.user?.uid!!,
+                            task.result.user?.email!!
+                        )
+                    )
+                }
             }
             .addOnFailureListener{
                 onFailure(it.message ?: "Authentication failed")

@@ -1,4 +1,4 @@
-package com.example.fitnessclub.data.View
+package com.example.fitnessclub.data.View.Login
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -43,11 +43,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fitnessclub.data.View.MainScreen.MainScreenDataObject
 
 @Composable
 fun LoginView(
     loginViewModel: LoginViewModel = viewModel(),
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: (MainScreenDataObject) -> Unit
 ) {
     val email by loginViewModel.email
     val password by loginViewModel.password
@@ -132,7 +133,8 @@ fun LoginView(
             modifier = Modifier.fillMaxWidth(0.8f),
             colors = ButtonDefaults.buttonColors(
                 containerColor = ButtonColorPart1
-            ), onClick = { loginViewModel.signIn(onLoginSuccess) },
+            ), onClick = {
+                loginViewModel.signIn(onLoginSuccess) },
             ) {
             Text(text = "Sign in")
         }

@@ -1,4 +1,4 @@
-package com.example.fitnessclub.data.View
+package com.example.fitnessclub.data.View.MainScreen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +9,7 @@ import com.example.fitnessclub.data.widgets.BottomMenu
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreenView() {
+fun MainScreenView(navData: MainScreenDataObject) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
