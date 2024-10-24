@@ -24,6 +24,7 @@ class AuthRepository(private val auth: FirebaseAuth) {
             }
             .addOnFailureListener{
                 onFailure(it.message ?: "Authentication failed")
+
             }
     }
 }
