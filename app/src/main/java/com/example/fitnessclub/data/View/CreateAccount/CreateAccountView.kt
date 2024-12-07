@@ -1,4 +1,4 @@
-package com.example.fitnessclub.data.View
+package com.example.fitnessclub.data.View.CreateAccount
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -32,7 +32,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fitnessclub.R
+import com.example.fitnessclub.data.View.Login.LoginScreenObject
+import com.example.fitnessclub.data.View.MainScreen.MainScreenDataObject
+import com.example.fitnessclub.data.ViewModel.CreateAccountViewModel
 import com.example.fitnessclub.data.widgets.RoundedCornerTextField
 import com.example.fitnessclub.data.widgets.RoundedCornerTextFieldPassword
 import com.example.fitnessclub.ui.theme.ButtonColorPart1
@@ -42,24 +46,17 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 @Composable
-fun CreateAccountView() {
-    val auth = remember { Firebase.auth }
+fun CreateAccountView(
+    createAccountViewModel: CreateAccountViewModel,
+    onCreateUserSuccess: (MainScreenDataObject) -> Unit,
+    onNavigate: (LoginScreenObject) -> Unit
+) {
 
-    val emailState = remember {
-        mutableStateOf("")
-    }
-    val passwordState = remember {
-        mutableStateOf("")
-    }
-    val repeatPasswordState = remember {
-        mutableStateOf("")
-    }
-
-    val errorState = remember {
-        mutableStateOf("")
-    }
-
-    var checkedState by remember { mutableStateOf(false) }
+    val emailState by createAccountViewModel.email
+    val passwordState by createAccountViewModel.password
+    val repeatPasswordState by createAccountViewModel.repeatPassword
+    val errorState by createAccountViewModel.error
+    val checkedState by createAccountViewModel.checkedState
 
 
     Column(
@@ -85,32 +82,29 @@ fun CreateAccountView() {
         Spacer(modifier = Modifier.height(30.dp))
 
         RoundedCornerTextField(
-            text = emailState.value,
+            text = emailState,
             label = "Email",
-            icon = painterResource(id = R.drawable.ic_mail)
-        ) {
-            emailState.value = it
-        }
+            icon = painterResource(id = R.drawable.ic_mail),
+            onValueChange = { createAccountViewModel.onEmailChange(it) }
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 
         RoundedCornerTextFieldPassword(
-            text = passwordState.value,
+            text = passwordState,
             label = "Password",
-            icon = painterResource(id = R.drawable.ic_lock)
-        ) {
-            passwordState.value = it
-        }
+            icon = painterResource(id = R.drawable.ic_lock),
+            onValueChange = { createAccountViewModel.onPasswordChange(it) }
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 
         RoundedCornerTextFieldPassword(
-            text = repeatPasswordState.value,
+            text = repeatPasswordState,
             label = "Repeat password",
-            icon = painterResource(id = R.drawable.ic_lock)
-        ) {
-            repeatPasswordState.value = it
-        }
+            icon = painterResource(id = R.drawable.ic_lock),
+            onValueChange = {createAccountViewModel.onRepeatPasswordChange(it)}
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -121,7 +115,7 @@ fun CreateAccountView() {
         ) {
             Checkbox(
                 checked = checkedState,
-                onCheckedChange = { checkedState = it },
+                onCheckedChange = { createAccountViewModel.onCheckedStateChange(it) },
                 colors = CheckboxDefaults.colors(
                     checkedColor = ButtonColorPart1,
                     uncheckedColor = Color.Black,
@@ -136,9 +130,9 @@ fun CreateAccountView() {
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        if (errorState.value.isNotEmpty()) {
+        if (errorState.isNotEmpty()) {
             Text(
-                text = errorState.value,
+                text = errorState,
                 color = Color.Red,
                 textAlign = TextAlign.Center,
             )
@@ -160,17 +154,7 @@ fun CreateAccountView() {
                 containerColor = ButtonColorPart1
             ),
             onClick = {
-                signUp(
-                    auth,
-                    emailState.value,
-                    passwordState.value,
-                    onSignInSuccess = {
-                        Log.d("MyLog", "Ok")
-                    },
-                    onSignInFailure = { error ->
-                        errorState.value = error
-                    }
-                )
+                createAccountViewModel.signUp(onCreateUserSuccess)
             }) {
             Text(text = "Sign up")
         }
@@ -184,32 +168,13 @@ fun CreateAccountView() {
                         textDecoration = TextDecoration.Underline
                     )
                 ) {
-                    append("Login") // Слово "Login"
+                    append("Login")
                 }
             },
             modifier = Modifier.clickable {
-                println("Hello, World!")
+                createAccountViewModel.navigateToLoginScreen(onNavigate)
             }
         )
     }
 }
 
-fun signUp(
-    auth: FirebaseAuth,
-    email: String,
-    password: String,
-    onSignInSuccess: () -> Unit,
-    onSignInFailure: (String) -> Unit
-) {
-    if (email.isBlank() || password.isBlank()) {
-        onSignInFailure("Email and password cannot be empty")
-        return
-    }
-    auth.createUserWithEmailAndPassword(email, password)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) onSignInSuccess()
-        }
-        .addOnFailureListener {
-            onSignInFailure(it.message ?: "Sign In Error")
-        }
-}

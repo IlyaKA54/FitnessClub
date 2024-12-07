@@ -8,23 +8,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 
 @Composable
-fun BottomMenu() {
+fun BottomMenu(navController: NavController) {
     val items = listOf(
         BottomMenuItem.Schedule,
         BottomMenuItem.Purchase,
         BottomMenuItem.Account
     )
 
-    val selectedItem = remember { mutableStateOf("Purchase") }
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
 
     NavigationBar {
-        items.forEach{ item ->
+        items.forEach { item ->
             NavigationBarItem(
-                selected = selectedItem.value == item.title,
+                selected = currentRoute == item.route,
                 onClick = {
-                    selectedItem.value = item.title
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 },
                 icon = {
                     Icon(

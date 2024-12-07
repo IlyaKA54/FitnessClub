@@ -43,12 +43,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fitnessclub.data.View.CreateAccount.CreateAccountObject
 import com.example.fitnessclub.data.View.MainScreen.MainScreenDataObject
+import com.example.fitnessclub.data.View.ResetPassword.ResetPasswordObject
 
 @Composable
 fun LoginView(
-    loginViewModel: LoginViewModel = viewModel(),
-    onLoginSuccess: (MainScreenDataObject) -> Unit
+    loginViewModel: LoginViewModel,
+    onLoginSuccess: (MainScreenDataObject) -> Unit,
+    onNavigateToCreateAccountScreen: (CreateAccountObject) -> Unit,
+    onNavigateToResetPasswordScreen: (ResetPasswordObject) -> Unit
 ) {
     val email by loginViewModel.email
     val password by loginViewModel.password
@@ -92,7 +96,7 @@ fun LoginView(
             onValueChange = { loginViewModel.onPasswordChange(it) }
         )
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Text(
             text = buildAnnotatedString {
@@ -106,7 +110,7 @@ fun LoginView(
                 }
             },
             modifier = Modifier.clickable {
-                println("Hello, World!")
+                loginViewModel.navigateToResetPasswordScreen(onNavigateToResetPasswordScreen)
             }
         )
 
@@ -115,7 +119,8 @@ fun LoginView(
         if (error.isNotEmpty()) {
             Text(
                 text = error,
-                color = Color.Red
+                color = Color.Red,
+                textAlign = TextAlign.Center
             )
         }
     }
@@ -152,28 +157,8 @@ fun LoginView(
                 }
             },
             modifier = Modifier.clickable {
-                println("Hello, World!")
+                loginViewModel.navigateToCreateAccountScreen(onNavigateToCreateAccountScreen)
             }
         )
     }
-}
-
-fun signIn(
-    auth: FirebaseAuth,
-    email: String,
-    password: String,
-    onSignInSuccess: () -> Unit,
-    onSignInFailure: (String) -> Unit
-) {
-    if (email.isBlank() || password.isBlank()) {
-        onSignInFailure("Email and password cannot be empty")
-        return
-    }
-    auth.signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) onSignInSuccess()
-        }
-        .addOnFailureListener {
-            onSignInFailure(it.message ?: "Sign In Error")
-        }
 }

@@ -6,14 +6,20 @@ import androidx.lifecycle.viewModelScope
 import com.example.fitnessclub.data.Model.AuthRepository
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.State
+import com.example.fitnessclub.data.View.CreateAccount.CreateAccountObject
 import com.example.fitnessclub.data.View.MainScreen.MainScreenDataObject
+import com.example.fitnessclub.data.View.ResetPassword.ResetPasswordObject
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
-class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
+class LoginViewModel(db: Firebase) : ViewModel() {
 
-    private val _email = mutableStateOf("")
+    private val _authRepository = AuthRepository(db)
+
+    private val _email = mutableStateOf("ilak1856@gmail.com")
     val email: State<String> = _email
 
-    private val _password = mutableStateOf("")
+    private val _password = mutableStateOf("123456789")
     val password: State<String> = _password
 
     private val _error = mutableStateOf("")
@@ -34,7 +40,7 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
             return
         }
 
-        authRepository.signIn(
+        _authRepository.signIn(
             email = _email.value,
             password = _password.value,
             onSuccess = { navData ->
@@ -44,5 +50,13 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
                 _error.value = errorMessage
             }
         )
+    }
+
+    fun navigateToCreateAccountScreen(onNavigate: (CreateAccountObject) -> Unit){
+        onNavigate(CreateAccountObject)
+    }
+
+    fun navigateToResetPasswordScreen(onNavigate: (ResetPasswordObject) -> Unit){
+        onNavigate(ResetPasswordObject)
     }
 }
